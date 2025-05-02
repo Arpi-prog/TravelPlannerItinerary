@@ -1,0 +1,41 @@
+/* Custom styles to complement Bootstrap */
+body {
+    background-color: #f8f9fa;
+}
+
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.itinerary-content {
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    white-space: pre-wrap;
+}
+
+.itinerary-content h3 {
+    color: #0d6efd;
+    margin-top: 20px;
+}
+
+.itinerary-content ul {
+    padding-left: 20px;
+}
+
+.navbar {
+    margin-bottom: 30px;
+}
+
+.alert {
+    margin-top: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 15px;
+    }
+}

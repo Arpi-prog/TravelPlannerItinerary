@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4>Create New Itinerary</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="city" class="form-label">Destination City</label>
+                            <input type="text" class="form-control" id="city" name="city" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="days" class="form-label">Days</label>
+                            <input type="number" class="form-control" id="days" name="days" min="1" max="30" value="3" required>
+                        </div>
+                        <div class="col-12">
+                            <label for="interests" class="form-label">Your Interests</label>
+                            <input type="text" class="form-control" id="interests" name="interests"
+                                   placeholder="e.g., beaches, museums, hiking" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="budget" class="form-label">Budget</label>
+                            <select class="form-select" id="budget" name="budget">
+                                <option value="budget">Budget</option>
+                                <option value="moderate" selected>Moderate</option>
+                                <option value="luxury">Luxury</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="season" class="form-label">Preferred Season</label>
+                            <select class="form-select" id="season" name="season">
+                                <option value="any" selected>Any</option>
+                                <option value="spring">Spring</option>
+                                <option value="summer">Summer</option>
+                                <option value="fall">Fall</option>
+                                <option value="winter">Winter</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary w-100">
+                                Generate Itinerary
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if destination_suggestions %}
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h4>Suggested Destinations</h4>
+            </div>
+            <div class="card-body">
+                <p>{{ destination_suggestions | safe }}</p>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if itinerary %}
+        <div class="card">
+            <div class="card-header bg-success text-white d-flex justify-content-between">
+                <h4>Your Travel Plan</h4>
+                <div>
+                    <button id="speakBtn" class="btn btn-sm btn-light me-2">
+                        <i class="bi bi-megaphone"></i> Read Aloud
+                    </button>
+                    <button id="saveBtn" class="btn btn-sm btn-light">
+                        <i class="bi bi-download"></i> Save
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="itineraryContent" class="itinerary-content">
+                    <pre style="white-space: pre-wrap;">{{ itinerary | safe }}</pre>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Text-to-Speech functionality
+document.getElementById('speakBtn')?.addEventListener('click', () => {
+    const content = document.getElementById('itineraryContent').innerText;
+    if (speechSynthesis.speaking) {
+        speechSynthesis.cancel();
+        return;
+    }
+    const utterance = new SpeechSynthesisUtterance(content);
+    speechSynthesis.speak(utterance);
+});
+
+// Save functionality
+document.getElementById('saveBtn')?.addEventListener('click', () => {
+    const content = document.getElementById('itineraryContent').innerText;
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'itinerary.txt';
+    a.click();
+});
+</script>
+{% endblock %}
